@@ -1,52 +1,70 @@
 🧾 Agente de Facturas con IA
-Agente inteligente que procesa facturas y boletas peruanas (PDF o imagen), extrae sus datos automáticamente con GPT-4o Vision, y permite consultarlas en lenguaje natural.
-¿Qué hace?
-📄 Extrae datos de facturas PDF o imágenes (RUC, proveedor, fecha, montos, IGV)
-🤖 Responde preguntas en lenguaje natural sobre tus gastos
-📊 Exporta a Excel con formato profesional, resumen y gráficos
-🔍 Detecta duplicados y analiza patrones de gasto
-Demo
-> *"¿Cuánto gasté en servicios este mes?"*
-> *"¿Cuál es mi proveedor más caro?"*
-> *"¿Hay facturas duplicadas?"*
-> *"Dame un resumen ejecutivo"*
-Stack
-Tecnología	Uso
-`LangChain`	Orquestación del agente
-`GPT-4o Vision`	Lectura e interpretación de facturas
-`pdfplumber`	Extracción de texto de PDFs
-`openpyxl`	Generación de Excel profesional
-`Pydantic`	Validación y estructura de datos
-`Streamlit`	Interfaz web
-Instalación
+Agente inteligente que procesa facturas y boletas peruanas (PDF o imagen), extrae sus datos automáticamente con GPT-4o Vision y permite consultarlas en lenguaje natural.
+---
+✨ Features
+Feature	Descripción
+📄 Extracción automática	Lee PDFs e imágenes con GPT-4o Vision
+🤖 Chat en lenguaje natural	Pregúntale sobre tus gastos como si fuera un contador
+📊 Export a Excel	Genera reporte profesional con gráficos automáticos
+🔍 Detecta duplicados	Evita doble pago de facturas
+🏷️ Categorización	Clasifica gastos por tipo automáticamente
+🇵🇪 Adaptado a Perú	Reconoce RUC, IGV 18% y formato de comprobantes SUNAT
+---
+🏗️ Arquitectura
+```
+PDF / Imagen → extractor.py → GPT-4o Vision
+                            │
+                            └── Pydantic (models.py)
+                            │
+                    ┌───────┴────────┐
+                 agent.py       excel_export.py
+                (LangChain)     (openpyxl)
+                    │
+                 tools.py
+        ┌───────────┼───────────┐
+   total_gastado  top_proveedores  detectar_duplicados ...
+                    │
+                 app.py
+               (Streamlit)
+```
+---
+🛠️ Stack
+IA: GPT-4o Vision + LangChain
+Extracción: pdfplumber + Pillow
+Datos: Pydantic v2
+Excel: openpyxl
+Interfaz: Streamlit
+Config: python-dotenv
+---
+🚀 Quickstart
+1. Clonar e instalar
 ```bash
-# 1. Clona el repositorio
 git clone https://github.com/walterJEM/agente-facturasDigitales.git
 cd agente-facturasDigitales
-
-# 2. Crea entorno virtual
-python -m venv venv
-venv\Scripts\activate
-
-# 3. Instala dependencias
+python -m venv .venv
+.venv\Scripts\activate
 pip install -r requirements.txt
-
-# 4. Configura tu API Key
+```
+2. Configurar API Key
+```bash
 cp .env.example .env
 # Edita .env y agrega tu OPENAI_API_KEY
-
-# 5. Ejecuta la app
+# Obtén tu key en: https://platform.openai.com
+```
+3. Correr la app
+```bash
 python -m streamlit run app.py
 ```
-Estructura del proyecto
+---
+📁 Estructura del proyecto
 ```
 agente-facturasDigitales/
 ├── app.py                  # Interfaz Streamlit
 ├── agent/
-│   ├── agent.py            # Lógica principal del agente
-│   ├── extractor.py        # Extracción de datos con GPT-4o
-│   ├── tools.py            # Herramientas de análisis
-│   ├── excel_export.py     # Exportación a Excel
+│   ├── agent.py            # Orquestador LangChain
+│   ├── extractor.py        # Lectura de PDFs e imágenes con GPT-4o
+│   ├── tools.py            # 6 herramientas de análisis
+│   ├── excel_export.py     # Generación de Excel profesional
 │   └── models.py           # Modelos Pydantic
 ├── data/
 │   └── facturas_ejemplo/   # Facturas de prueba
@@ -54,11 +72,49 @@ agente-facturasDigitales/
 ├── requirements.txt
 └── .env.example
 ```
-Uso
-Abre la app con `python -m streamlit run app.py`
-Sube tus facturas (PDF o imagen) en el panel izquierdo
-Haz clic en Procesar Facturas
-Haz preguntas en el chat o usa las sugerencias rápidas
-Exporta el Excel cuando quieras
-Autor
+---
+🤖 Herramientas del agente
+Herramienta	¿Qué hace?
+`total_gastado`	Calcula el gasto total o por mes
+`gasto_por_categoria`	Desglosa por tipo de gasto
+`top_proveedores`	Ranking de proveedores por monto
+`buscar_factura`	Busca por nombre, RUC o descripción
+`detectar_duplicados`	Compara montos y proveedores
+`resumen_general`	Vista ejecutiva completa
+---
+💬 Ejemplo de uso
+```
+Usuario: ¿Cuánto gasté en servicios este mes?
+Agente:  📊 Gasto en Servicios: S/ 850.00
+         • Claro Perú - Internet: S/ 150.00
+         • AWS - Cloud: S/ 420.00
+         • Adobe - Licencia: S/ 280.00
+
+Usuario: ¿Hay facturas duplicadas?
+Agente:  ⚠️ Se encontró 1 posible duplicado:
+         • claro_abril.pdf y claro_abril_2.pdf
+           Claro Perú — S/ 150.00
+```
+---
+📊 Excel generado
+El agente exporta un Excel con 3 hojas:
+Facturas — detalle completo con formato profesional
+Resumen — gasto agrupado por categoría + gráfico de barras
+Info — metadata del reporte
+---
+🗺️ Roadmap
+[x] Extracción de datos con GPT-4o Vision
+[x] Chat en lenguaje natural con LangChain
+[x] Export a Excel con gráficos
+[x] Detección de duplicados
+[ ] Validación de RUC contra SUNAT API
+[ ] Alertas por Telegram cuando detecta anomalías
+[ ] Soporte para tickets y recibos informales
+[ ] Deploy en Railway / Render
+[ ] Versión API REST con FastAPI
+---
+📄 Licencia
+MIT — úsalo, modifícalo, contribuye.
+---
+👤 Autor
 Desarrollado por Walter Espino — Egresado de Ing. de Sistemas
