@@ -1,0 +1,25 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="beautifulsoup4" />
+          <option value="certifi" />
+          <option value="charset-normalizer" />
+          <option value="greenlet" />
+          <option value="idna" />
+          <option value="lxml" />
+          <option value="playwright" />
+          <option value="psycopg2-binary" />
+          <option value="pyee" />
+          <option value="PyYAML" />
+          <option value="requests" />
+          <option value="soupsieve" />
+          <option value="typing_extensions" />
+          <option value="urllib3" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
